@@ -41,6 +41,10 @@ var mainState = {
         // Call the function addOnePipe, and makes the papes on each 1.5 seconds
         this.timer = game.time.events.loop(1500, this.addRowOfPipes, this);
 
+
+        this.score = 0;
+        this.labelScore = game.add.text(20, 20, "0", 
+            { font: "30px Arial", fill: "#ffffff" });
     },
 
     update: function() {
@@ -49,8 +53,11 @@ var mainState = {
 
         // If the bird is out of the screen (too high or too low)
         // Call the 'restartGame' function
-    if (this.bird.y < 0 || this.bird.y > 490)
-        this.restartGame();   
+        if (this.bird.y < 0 || this.bird.y > 490)
+        this.restartGame();  
+
+        game.physics.arcade.overlap(
+        this.bird, this.pipes, this.restartGame, null, this); 
     },
 
     // Make the bird jump 
@@ -66,21 +73,25 @@ var mainState = {
     },
 
     addOnePipe: function(x, y) {
-    // Create a pipe at the position x and y
-    var pipe = game.add.sprite(x, y, 'pipe');
+        // Create a pipe at the position x and y
+        var pipe = game.add.sprite(x, y, 'pipe');
 
-    // Add the pipe to our previously created group
-    this.pipes.add(pipe);
+        // Add the pipe to our previously created group
+        this.pipes.add(pipe);
 
-    // Enable physics on the pipe 
-    game.physics.arcade.enable(pipe);
+        // Enable physics on the pipe 
+        game.physics.arcade.enable(pipe);
 
-    // Add velocity to the pipe to make it move left
-    pipe.body.velocity.x = -200; 
+        // Add velocity to the pipe to make it move left
+        pipe.body.velocity.x = -200; 
 
-    // Automatically kill the pipe when it's no longer visible 
-    pipe.checkWorldBounds = true;
-    pipe.outOfBoundsKill = true;
+        // Automatically kill the pipe when it's no longer visible 
+        pipe.checkWorldBounds = true;
+        pipe.outOfBoundsKill = true;
+
+        this.score += 1;
+        this.labelScore.text = this.score;
+
     },
 };
 
